@@ -37,19 +37,20 @@ void delayMs( int ms )
 }
 void initSPI(void)
 {
-	if (!bcm2835_init())
+	bcm2835_init();
+
+	if (!bcm2835_spi_begin())
 	{
 		printf("bcm2835_spi_begin failed. Are you running as root??\n");
 		return;
 	}
 
-	bcm2835_spi_begin();
 	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);      // The default
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);                   // The default
 	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_256); // The default
 
 	bcm2835_gpio_fsel(PIN_OUT, BCM2835_GPIO_FSEL_OUTP);
-	bcm2835_gpio_fsel(RST , BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(RST, BCM2835_GPIO_FSEL_OUTP);
 
 	ss(HIGH);
 	// change to 3.3V for reading value
@@ -69,7 +70,7 @@ void initSD1( void )
 	//	4.	DRV_SEL	: low
 	writeSingle(29, 1);  //  3.3v
 
-							 //	5.	AP0 : 0
+	//	5.	AP0 : 0
 	writeSingle(2, 0x0e);
 
 	//	6.	wait for Quarz stability
